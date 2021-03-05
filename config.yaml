@@ -1,0 +1,15 @@
+# dataset
+dataset_url: "http://mtg.upf.edu/ismir2004/contest/tempoContest/data1.tar.gz"
+label_url: "https://github.com/CPJKU/BallroomAnnotations/archive/master.zip"
+dataset_folder: "/homes/yz007/datasets/ballroom/BallroomData/"
+label_folder: "/homes/yz007/datasets/ballroom/label/"
+spec_folder: "/homes/yz007/datasets/ballroom/spec/"
+
+# create mel spectrogram
+fft_size: 2048
+hop_length: 0.01
+n_mels: 81
+
+# model parameters
+
+# training settings
