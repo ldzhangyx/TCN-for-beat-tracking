@@ -1,9 +1,6 @@
-
-
-
 import torch
 from torch.utils.data import Dataset
 import numpy as np
 
-class BallroomDataset(Dataset):
-    '''
+def beatTracker(input_file_path):
+    pass

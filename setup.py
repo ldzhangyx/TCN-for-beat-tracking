@@ -1,6 +1,7 @@
 import utils
 import os
 import yaml
+from eval import beatTracker
 
 with open('config.yaml', 'r') as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
@@ -18,3 +19,7 @@ if (len(os.listdir(config['dataset_folder'])) > 0 and
     len(os.listdir(config['spec_folder'])) == 0):
     utils.init_all_specs()
 
+
+
+
+# call
