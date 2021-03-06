@@ -5,6 +5,9 @@ dataset_folder: "/homes/yz007/datasets/ballroom/BallroomData/"
 label_folder: "/homes/yz007/datasets/ballroom/label/"
 spec_folder: "/homes/yz007/datasets/ballroom/spec/"
 
+# model and log
+model_folder: "/homes/yz007/models/TCN/"
+
 # create mel spectrogram
 fft_size: 2048
 hop_length: 0.01
@@ -49,6 +52,7 @@ num_epoch: 100
 batch_size: 1
 optimizer: 'Adam'
 learning_rate: 0.001
+k_fold: 8
 
 # CUDA
 cuda: True
