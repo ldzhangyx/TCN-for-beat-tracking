@@ -33,7 +33,6 @@ k_fold = config['k_fold']
 
 # load dataset
 dataset = BallroomDataset()
-print(len(dataset))
 # split dataset
 # if not cross_validation:
 [train_dataset, valid_dataset] = random_split(dataset, [630, 68],
@@ -85,8 +84,9 @@ for i in range(1, num_epoch + 1):
     train_loader = DataLoader(train_dataset, batch_size=len(valid_dataset))
     with torch.no_grad():
         for input, label in valid_loader:
+            if GPU:
+                input, label = input.float().cuda(), label.cuda()
             output = model(input)
-
             loss = criterion(output, label)
             print(f'Average Valid Loss {loss.item() / len(valid_dataset)}.')
             break
@@ -94,6 +94,8 @@ for i in range(1, num_epoch + 1):
     # save model
     if i % 2 == 0:
         torch.save(model.cpu().state_dict(), f"{config['model_folder']}_Epoch{i}.pt")
+        if GPU:
+            model.cuda()
 
 # evaluate
 
