@@ -33,9 +33,10 @@ k_fold = config['k_fold']
 
 # load dataset
 dataset = BallroomDataset()
+print(len(dataset))
 # split dataset
 # if not cross_validation:
-[train_dataset, valid_dataset] = random_split(dataset, [9, 1],
+[train_dataset, valid_dataset] = random_split(dataset, [630, 68],
                                               generator=torch.Generator().manual_seed(42))
 
 valid_loader = DataLoader(valid_dataset, batch_size = batch_size)
@@ -53,7 +54,7 @@ criterion = BCELoss()
 
 params = list(model.parameters()) + list(criterion.parameters())
 total_params = sum(x.size()[0] * x.size()[1] if len(x.size()) > 1 else x.size()[0] for x in params if x.size())
-print('Total parameters: ')
+print(f'Total parameters: {total_params}')
 # train and valid
 for i in range(1, num_epoch + 1):
     # training
@@ -65,6 +66,8 @@ for i in range(1, num_epoch + 1):
     train_loader = DataLoader(train_dataset, batch_size=batch_size)
     for input, label in train_loader:
         optimizer.zero_grad()
+        if GPU:
+            input, label = input.float().cuda(), label.cuda()
         output = model(input)
         loss = criterion(output, label)
         loss.backward()

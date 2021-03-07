@@ -42,7 +42,7 @@ CNN_pool_size:
     - 3
   -
     - 1
-    - 8
+    - 3
 TCN_filters: 16
 TCN_kernel_size: 5
 dropout: 0.1

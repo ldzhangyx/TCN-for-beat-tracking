@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from torch.nn.utils import weight_norm
 import yaml
+import pdb
 
 with open('config.yaml', 'r') as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
@@ -62,6 +63,10 @@ class TCNLayer(nn.Module):
 
         return y
 
+    def _initialise_weights(self, *layers):
+        for layer in layers:
+            if layer is not None:
+                layer.weight.data.normal_(0, 0.01)
 
 class TCN(nn.Module):
     def __init__(self,
@@ -77,7 +82,7 @@ class TCN(nn.Module):
         for i in range(n_levels):
             dilation = 2 ** i
 
-            n_channels_in = filters[i - 1] if i > 0 else filters
+            n_channels_in = filters[i - 1] if i > 0 else input
             n_channels_out = filters[i]
 
             self.layers.append(
@@ -110,14 +115,14 @@ class BeatTrackingNet(nn.Module):
             nn.Dropout(config['dropout']),
             nn.MaxPool2d((config['CNN_pool_size'][0][0],config['CNN_pool_size'][0][1])),
             # conv2
-            nn.Conv2d(1, config['CNN_filters'][1],
+            nn.Conv2d(config['CNN_filters'][0], config['CNN_filters'][1],
                       (config['CNN_filter_size'][1][0], config['CNN_filter_size'][1][1]),
                       padding=(1, 0)),
             nn.ELU(),
             nn.Dropout(config['dropout']),
             nn.MaxPool2d((config['CNN_pool_size'][1][0], config['CNN_pool_size'][1][1])),
             # conv3
-            nn.Conv2d(1, config['CNN_filters'][2],
+            nn.Conv2d(config['CNN_filters'][1], config['CNN_filters'][2],
                       (config['CNN_filter_size'][2][0], config['CNN_filter_size'][2][1]),
                       padding=(1, 0)),
             nn.ELU(),
@@ -130,11 +135,14 @@ class BeatTrackingNet(nn.Module):
             config['TCN_kernel_size'],
             config['dropout'])
 
-        self.out = nn.Conv1d(16, 3)
+        self.out = nn.Conv1d(16, 1, 1)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, input):
+        input = input.unsqueeze(1)
         output = self.net(input)
+        output = output.view(-1, output.shape[1], output.shape[2])
+        output = self.TCN(output)
         output = self.out(output)
         output = self.sigmoid(output)
 
