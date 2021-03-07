@@ -55,10 +55,6 @@ class TCNLayer(nn.Module):
         y = self.conv2(y)
         y = self.elu2(y)
         y = self.dropout2(y)
-
-        if self.downsample is not None:
-            y = y + self.downsample(x)
-
         y = self.elu3(y)
 
         return y
@@ -123,8 +119,7 @@ class BeatTrackingNet(nn.Module):
             nn.MaxPool2d((config['CNN_pool_size'][1][0], config['CNN_pool_size'][1][1])),
             # conv3
             nn.Conv2d(config['CNN_filters'][1], config['CNN_filters'][2],
-                      (config['CNN_filter_size'][2][0], config['CNN_filter_size'][2][1]),
-                      padding=(1, 0)),
+                      (config['CNN_filter_size'][2][0], config['CNN_filter_size'][2][1])),
             nn.ELU(),
             nn.Dropout(config['dropout']),
         )
@@ -139,7 +134,6 @@ class BeatTrackingNet(nn.Module):
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, input):
-        input = input.unsqueeze(1)
         output = self.net(input)
         output = output.view(-1, output.shape[1], output.shape[2])
         output = self.TCN(output)

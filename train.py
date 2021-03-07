@@ -86,6 +86,7 @@ for i in range(1, num_epoch + 1):
     with torch.no_grad():
         for input, label in valid_loader:
             output = model(input)
+
             loss = criterion(output, label)
             print(f'Average Valid Loss {loss.item() / len(valid_dataset)}.')
             break

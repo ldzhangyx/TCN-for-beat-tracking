@@ -28,6 +28,9 @@ class BallroomDataset(Dataset):
         spec = self.get_spectrogram(data_path)
         beat_vector = self.get_beat_vector(label_path, spec)
         spec, beat_vector = self.trim_data(spec, beat_vector)
+        spec = torch.from_numpy(np.expand_dims(spec.T, axis=0)).float()
+        beat_vector = torch.from_numpy(np.expand_dims(
+            beat_vector[:3000].astype('float64'), axis=0)).float()
         return spec, beat_vector
 
     def get_spectrogram(self, data_path):
