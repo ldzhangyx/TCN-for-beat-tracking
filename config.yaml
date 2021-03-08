@@ -5,6 +5,10 @@ dataset_folder: "/homes/yz007/datasets/ballroom/BallroomData/"
 label_folder: "/homes/yz007/datasets/ballroom/label/"
 spec_folder: "/homes/yz007/datasets/ballroom/spec/"
 
+# eval
+default_checkpoint_path: "/homes/yz007/models/TCN/_Epoch50.pt"
+
+
 # model and log
 model_folder: "/homes/yz007/models/TCN/"
 
@@ -52,7 +56,7 @@ num_epoch: 100
 batch_size: 1
 optimizer: 'Adam'
 learning_rate: 0.001
-k_fold: 8
+k_fold: 10
 
 # CUDA
 cuda: True

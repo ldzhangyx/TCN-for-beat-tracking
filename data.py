@@ -37,6 +37,22 @@ class BallroomDataset(Dataset):
         spec = np.load(data_path)
         return spec
 
+    def get_ground_truth(self, index):
+        with open(os.path.join(config['label_folder'], self.data_list[index] + '.beats'),'r') as f:
+            beat_times = []
+            for line in f:
+                [beat_time, beat_position]= line.strip().split()
+                beat_time = float(beat_time)
+                beat_position = int(beat_position)
+                if index == 1:
+                    beat_times.append(beat_time * config['sample_rate'])
+        quantised_times = []
+        for time in beat_times:
+            spec_frame = int(time / config['hop_length'])
+            quantised_time = spec_frame * config['hop_length'] / config['sample_rate']
+            quantised_times.append(quantised_time)
+        return np.array(quantised_times)
+
     def get_beat_vector(self, label_path, spec):
         beat_vector = np.zeros(spec.shape[-1])
         beat_list = list()  # parse beat file
